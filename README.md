@@ -33,9 +33,24 @@ npm run report            # open HTML report
 Run specific tests:
 
 ```bash
-npx playwright test tests/e2e         # e2e tests only
-npx playwright test tests/api         # api tests only
-npx playwright test --project=chromium  # single browser
-npx playwright test --debug           # debug mode
-npx playwright codegen <url>          # record tests by clicking
+npx playwright test tests/e2e                        # e2e tests only
+npx playwright test tests/api                        # api tests only
+npx playwright test --project=chromium               # single browser
+npx playwright test --debug                          # debug mode
+npx playwright codegen <url>                         # record tests by clicking
+```
+
+Run a specific test folder or file and open its report:
+
+```bash
+npx playwright test tests/e2e/exampleTest                        # run exampleTest folder
+npx playwright test tests/e2e/exampleTest/example.spec.js        # run specific file
+npx playwright show-report                                       # open report after run
+```
+
+Or in one command:
+
+```bash
+npx playwright test tests/e2e/exampleTest && npx playwright show-report                        # folder
+npx playwright test tests/e2e/exampleTest/example.spec.js && npx playwright show-report        # specific file
 ```
