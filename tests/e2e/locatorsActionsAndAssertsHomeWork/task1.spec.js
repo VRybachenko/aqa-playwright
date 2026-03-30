@@ -73,6 +73,7 @@ test.describe('Registration modal', () => {
     test('[Test][Negative] : Password field shows error when password is too short (7 characters)', async () => {
         //Step 1: Generate valid user data
         const {firstName, lastName, email} = generateUserData();
+        const INVALID_SHORT_PASSWORD = 'Aa1!567';
 
         //Step 2: Fill in valid Name, Last Name, and Email fields
         await signupModal.fillName(firstName);
@@ -80,7 +81,7 @@ test.describe('Registration modal', () => {
         await signupModal.fillEmail(email);
 
         //Step 3: Enter a password that is too short (7 characters)
-        await signupModal.fillPassword('Aa1!567');
+        await signupModal.fillPassword(INVALID_SHORT_PASSWORD);
 
         //Step 4: Move focus to the next field to trigger validation
         await signupModal.repeatPasswordInput.click();
