@@ -17,11 +17,18 @@ module.exports = defineConfig({
   reporter: [
     ['list'],
     ['html', { open: 'never' }],
+    ['allure-playwright'],
   ],
 
   use: {
     //Base URL — allows using page.goto('/') instead of full URL
-    // baseURL: 'https://example.com',
+    baseURL: 'https://qauto.forstudy.space',
+
+    //HTTP Basic Auth credentials
+    httpCredentials: {
+      username: 'guest',
+      password: 'welcome2qauto',
+    },
 
     //Save screenshots/video only on failure
     screenshot: 'only-on-failure',
