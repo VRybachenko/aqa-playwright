@@ -1,22 +1,8 @@
-const {test, expect} = require('@playwright/test');
-const {HomePage} = require('../../../pages/HomePage');
-const {SignupModal} = require('../../../pages/SignupModal');
-const {generateUserData} = require('../../../helpers/userGenerator');
+const { test, expect } = require('../../../fixtures');
+const { generateUserData } = require('../../../helpers/userGenerator');
 
 test.describe('Registration modal', () => {
-    let homePage;
-    let signupModal;
-
-    test.beforeEach(async ({page}) => {
-        //Precondition: open home page and click Sign Up
-        homePage = new HomePage(page);
-        signupModal = new SignupModal(page);
-        await homePage.open();
-        await homePage.clickSignUp();
-        await signupModal.expectToBeOpen();
-    });
-
-    test('[Test][Positive] : Successful registration', async () => {
+    test('[Test][Positive] : Successful registration', async ({ signupModal }) => {
         //Step 1: Generate random Marvel user data
         const {firstName, lastName, email, password} = generateUserData();
 
@@ -27,7 +13,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.modal).not.toBeVisible();
     });
 
-    test('[Test][Negative] : Name field shows error for invalid characters (numbers)', async () => {
+    test('[Test][Negative] : Name field shows error for invalid characters (numbers)', async ({ signupModal }) => {
         //Step 1: Enter numbers in the Name field
         await signupModal.fillName('12345');
 
@@ -39,7 +25,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.nameInput).toHaveClass(/is-invalid/);
     });
 
-    test('[Test][Negative] : Name field shows error when value is too short (1 character)', async () => {
+    test('[Test][Negative] : Name field shows error when value is too short (1 character)', async ({ signupModal }) => {
         //Step 1: Enter a single character in the Name field
         await signupModal.fillName('A');
 
@@ -51,7 +37,31 @@ test.describe('Registration modal', () => {
         await expect(signupModal.nameInput).toHaveClass(/is-invalid/);
     });
 
-    test('[Test][Negative] : Email field shows error for incorrect email format', async () => {
+    test('[Test][Negative] : Last name field shows error for invalid characters (numbers)', async ({ signupModal }) => {
+        //Step 1: Enter numbers in the Last name field
+        await signupModal.fillLastName('12345');
+
+        //Step 2: Move focus to the next field to trigger validation
+        await signupModal.fillEmail('test@test.com');
+
+        //Expected result: error message is shown and field is highlighted as invalid
+        await expect(signupModal.lastNameError).toHaveText('Last name is invalid');
+        await expect(signupModal.lastNameInput).toHaveClass(/is-invalid/);
+    });
+
+    test('[Test][Negative] : Last name field shows error when value is too short (1 character)', async ({ signupModal }) => {
+        //Step 1: Enter a single character in the Last name field
+        await signupModal.fillLastName('A');
+
+        //Step 2: Move focus to the next field to trigger validation
+        await signupModal.fillEmail('test@test.com');
+
+        //Expected result: error message about length is shown and field is highlighted as invalid
+        await expect(signupModal.lastNameError).toHaveText('Last name has to be from 2 to 20 characters long');
+        await expect(signupModal.lastNameInput).toHaveClass(/is-invalid/);
+    });
+
+    test('[Test][Negative] : Email field shows error for incorrect email format', async ({ signupModal }) => {
         //Step 1: Generate valid name and password data
         const {firstName, lastName, password} = generateUserData();
 
@@ -70,7 +80,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.emailInput).toHaveClass(/is-invalid/);
     });
 
-    test('[Test][Negative] : Password field shows error when password is too short (7 characters)', async () => {
+    test('[Test][Negative] : Password field shows error when password is too short (7 characters)', async ({ signupModal }) => {
         //Step 1: Generate valid user data
         const {firstName, lastName, email} = generateUserData();
         const INVALID_SHORT_PASSWORD = 'Aa1!567'; //intentionally short password (7 chars) for validation test
@@ -91,7 +101,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.passwordInput).toHaveClass(/is-invalid/);
     });
 
-    test('[Test][Negative] : Re-enter password shows error when passwords do not match', async () => {
+    test('[Test][Negative] : Re-enter password shows error when passwords do not match', async ({ signupModal }) => {
         //Step 1: Generate valid user data
         const {firstName, lastName, email, password} = generateUserData();
 
@@ -112,7 +122,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.repeatPasswordInput).toHaveClass(/is-invalid/);
     });
 
-    test('[Test][Negative] : Register button is disabled when all fields are empty', async () => {
+    test('[Test][Negative] : Register button is disabled when all fields are empty', async ({ signupModal }) => {
         //Expected result: Register button is disabled by default with no input
         await expect(signupModal.registerButton).toBeDisabled();
     });

@@ -1,9 +1,8 @@
-const {expect} = require('@playwright/test');
+const { expect } = require('@playwright/test');
 
 class SignupModal {
     /** @param {import('@playwright/test').Page} page */
     constructor(page) {
-        this.page = page;
         this.modal = page.locator('.modal-content');
         this.title = page.locator('.modal-title');
         this.closeButton = page.locator('app-signup-modal button.close');
@@ -61,4 +60,4 @@ class SignupModal {
     }
 }
 
-module.exports = {SignupModal};
+module.exports = { SignupModal };
