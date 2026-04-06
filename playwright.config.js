@@ -1,7 +1,8 @@
 const { defineConfig, devices } = require('@playwright/test');
 const envConfig = require('./config/env.config');
-
 module.exports = defineConfig({
+  globalSetup: './config/global-setup',
+
   //Directory with tests
   testDir: './tests',
 
@@ -18,7 +19,7 @@ module.exports = defineConfig({
   reporter: [
     ['list'],
     ['html', { open: 'never' }],
-    ['allure-playwright'],
+    ['allure-playwright', { resultsDir: `allure-results-${process.env.ENV || 'qauto1'}` }],
   ],
 
   use: {
