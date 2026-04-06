@@ -74,6 +74,18 @@ npx playwright test
 ENV=qauto2 npx playwright test
 ```
 
+## Allure Report
+
+```bash
+# qauto1
+npx playwright test tests/e2e/locatorsActionsAndAssertsHomeWork
+npx allure generate allure-results-qauto1 --clean -o allure-report-qauto1 && npx allure open allure-report-qauto1
+
+# qauto2
+ENV=qauto2 npx playwright test tests/e2e/locatorsActionsAndAssertsHomeWork
+npx allure generate allure-results-qauto2 --clean -o allure-report-qauto2 && npx allure open allure-report-qauto2
+```
+
 ## CI / GitHub Actions
 
 Runs automatically on every push and pull request via GitHub Actions on both environments (`qauto1`, `qauto2`) in parallel.
@@ -92,16 +104,6 @@ Required GitHub secrets:
 | `BASE_URL_QAUTO2` | Base URL for qauto2 environment |
 | `HTTP_USERNAME` | Basic Auth username (stored in GitHub Secrets) |
 | `HTTP_PASSWORD` | Basic Auth password (stored in GitHub Secrets) |
-
-## Allure Report
-
-```bash
-# Run tests + generate + open report
-npx playwright test tests/e2e/locatorsActionsAndAssertsHomeWork; npx allure generate allure-results --clean && npx allure open
-
-# Clear old reports
-rm -rf allure-results allure-report
-```
 
 ## Tests
 
