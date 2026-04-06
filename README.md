@@ -6,12 +6,14 @@ A learning project for exploring the [Playwright](https://playwright.dev) test a
 
 ```
 aqa-playwright/
+├── config/         # Environment config (reads from .env)
 ├── pages/          # Page Object classes (HomePage, GaragePage, BasePage)
 ├── components/     # Reusable UI components (Header, Footer, Hero, SignupModal, Sidebar, GaragePanel, UserNav)
 ├── fixtures/       # Custom Playwright fixtures (homePage, garagePage, signupModal)
 ├── helpers/        # Test data generators (userGenerator)
 ├── tests/
 │   └── e2e/        # UI tests
+├── .env.example    # Environment variables template
 └── playwright.config.js
 ```
 
@@ -20,6 +22,33 @@ aqa-playwright/
 ```bash
 npm install
 npx playwright install
+```
+
+## Environment Setup
+
+The project supports two environments. Copy `.env.example` and fill in the values:
+
+```bash
+cp .env.example .env.qauto1
+cp .env.example .env.qauto2
+```
+
+| Variable | qauto1 | qauto2 |
+|---|---|---|
+| `BASE_URL` | `https://qauto.forstudy.space` | `https://qauto2.forstudy.space` |
+| `HTTP_USERNAME` | `guest` | `guest` |
+| `HTTP_PASSWORD` | `welcome2qauto` | `welcome2qauto` |
+
+> `.env.qauto1` and `.env.qauto2` are git-ignored and never committed. Use `.env.example` as a reference.
+
+## Running Tests on Specific Environment
+
+```bash
+# qauto1 (default)
+npx playwright test tests/e2e/locatorsActionsAndAssertsHomeWork
+
+# qauto2
+ENV=qauto2 npx playwright test tests/e2e/locatorsActionsAndAssertsHomeWork
 ```
 
 ## Running Tests
@@ -67,7 +96,7 @@ Key settings in `playwright.config.js`:
 
 | Setting | Value |
 |---|---|
-| Base URL | `https://qauto.forstudy.space` |
+| Base URL | from `.env.qauto1` / `.env.qauto2` → `BASE_URL` |
 | Browsers | Chromium, Firefox, WebKit |
 | Parallel | `fullyParallel: true` |
 | Retries | 2 |

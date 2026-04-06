@@ -3,6 +3,8 @@ const { test, expect } = require('../../../fixtures');
 test.describe('Garage page (guest)', () => {
     
     test('[Test][Positive] : Guest bar is visible with correct message', async ({ garagePage }) => {
+        test.skip(process.env.ENV === 'qauto2', 'Guest bar not available on qauto2');
+
         //Expected result: warning bar is shown at the top of the header
         await expect(garagePage.header.guestBar).toBeVisible();
         await expect(garagePage.header.guestBar).toHaveText('Logged in as guest, any changes will be lost!');

@@ -1,4 +1,5 @@
 const { defineConfig, devices } = require('@playwright/test');
+const envConfig = require('./config/env.config');
 
 module.exports = defineConfig({
   //Directory with tests
@@ -22,13 +23,10 @@ module.exports = defineConfig({
 
   use: {
     //Base URL — allows using page.goto('/') instead of full URL
-    baseURL: 'https://qauto.forstudy.space',
+    baseURL: envConfig.baseUrl,
 
     //HTTP Basic Auth credentials
-    httpCredentials: {
-      username: 'guest',
-      password: 'welcome2qauto',
-    },
+    httpCredentials: envConfig.httpCredentials,
 
     //Save screenshots/video only on failure
     screenshot: 'only-on-failure',
