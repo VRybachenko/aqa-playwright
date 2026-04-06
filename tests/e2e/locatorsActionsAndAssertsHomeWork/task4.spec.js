@@ -2,7 +2,7 @@ const { test, expect } = require('../../../fixtures');
 const { SignupModal } = require('../../../components/SignupModal');
 
 test.describe('Header', () => {
-    test('[Test][Positive] : Logo is visible and links to home page', async ({ homePage }) => {
+    test('[Test][Positive] : Logo is visible and links to home page @smoke', async ({ homePage }) => {
         //Expected result: logo is displayed and href points to "/"
         await expect(homePage.header.logo).toBeVisible();
         await expect(homePage.header.logo).toHaveAttribute('href', '/');
@@ -26,7 +26,7 @@ test.describe('Header', () => {
         await expect(homePage.header.contactsButton).toBeEnabled();
     });
 
-    test('[Test][Positive] : Guest log in button is visible and enabled', async ({ homePage }) => {
+    test('[Test][Positive] : Guest log in button is visible and enabled @smoke', async ({ homePage }) => {
         //Expected result: Guest log in button is visible and clickable
         await expect(homePage.header.guestLoginButton).toBeVisible();
         await expect(homePage.header.guestLoginButton).toBeEnabled();
@@ -74,7 +74,7 @@ test.describe('Header', () => {
         await expect(page).toHaveURL('/');
     });
 
-    test('[Test][Positive] : Sign In button opens sign in modal', async ({ homePage, page }) => {
+    test('[Test][Positive] : Sign In button opens sign in modal @smoke', async ({ homePage, page }) => {
         //Step 1: Click the Sign In button in the header
         await homePage.header.clickSignIn();
 
@@ -82,7 +82,7 @@ test.describe('Header', () => {
         await expect(page.locator('.modal-content')).toBeVisible();
     });
 
-    test('[Test][Positive] : Guest log in redirects to garage page', async ({ homePage, page }) => {
+    test('[Test][Positive] : Guest log in redirects to garage page @smoke', async ({ homePage, page }) => {
         //Step 1: Click the Guest log in button in the header
         await homePage.header.clickGuestLogin();
 

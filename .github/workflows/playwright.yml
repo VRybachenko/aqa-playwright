@@ -28,7 +28,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run tests on ${{ matrix.env }}
-        run: npx playwright test tests/e2e/locatorsActionsAndAssertsHomeWork/task1.spec.js
+        run: npx playwright test --grep @smoke
         env:
           ENV: ${{ matrix.env }}
           BASE_URL: ${{ matrix.env == 'qauto1' && secrets.BASE_URL_QAUTO1 || secrets.BASE_URL_QAUTO2 }}

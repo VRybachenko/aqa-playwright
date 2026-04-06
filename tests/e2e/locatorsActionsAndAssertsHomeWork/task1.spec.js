@@ -2,7 +2,7 @@ const { test, expect } = require('../../../fixtures');
 const { generateUserData } = require('../../../helpers/userGenerator');
 
 test.describe('Registration modal', () => {
-    test('[Test][Positive] : Successful registration', async ({ signupModal }) => {
+    test('[Test][Positive] : Successful registration @smoke', async ({ signupModal }) => {
         //Step 1: Generate random Marvel user data
         const {firstName, lastName, email, password} = generateUserData();
 
@@ -13,7 +13,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.modal).not.toBeVisible();
     });
 
-    test('[Test][Negative] : Name field shows error for invalid characters (numbers)', async ({ signupModal }) => {
+    test('[Test][Negative] : Name field shows error for invalid characters (numbers) @smoke', async ({ signupModal }) => {
         //Step 1: Enter numbers in the Name field
         await signupModal.fillName('12345');
 
@@ -61,7 +61,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.lastNameInput).toHaveClass(/is-invalid/);
     });
 
-    test('[Test][Negative] : Email field shows error for incorrect email format', async ({ signupModal }) => {
+    test('[Test][Negative] : Email field shows error for incorrect email format @smoke', async ({ signupModal }) => {
         //Step 1: Generate valid name and password data
         const {firstName, lastName, password} = generateUserData();
 
@@ -122,7 +122,7 @@ test.describe('Registration modal', () => {
         await expect(signupModal.repeatPasswordInput).toHaveClass(/is-invalid/);
     });
 
-    test('[Test][Negative] : Register button is disabled when all fields are empty', async ({ signupModal }) => {
+    test('[Test][Negative] : Register button is disabled when all fields are empty @smoke', async ({ signupModal }) => {
         //Expected result: Register button is disabled by default with no input
         await expect(signupModal.registerButton).toBeDisabled();
     });
