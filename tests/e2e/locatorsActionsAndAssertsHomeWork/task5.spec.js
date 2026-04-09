@@ -3,12 +3,14 @@ const { test, expect } = require('../../../fixtures');
 test.describe('Garage page (guest)', () => {
     
     test('[Test][Positive] : Guest bar is visible with correct message', async ({ garagePage }) => {
+        test.skip(process.env.ENV === 'qauto2', 'Guest bar not available on qauto2');
+
         //Expected result: warning bar is shown at the top of the header
         await expect(garagePage.header.guestBar).toBeVisible();
         await expect(garagePage.header.guestBar).toHaveText('Logged in as guest, any changes will be lost!');
     });
 
-    test('[Test][Positive] : Header Garage link is visible and active', async ({ garagePage }) => {
+    test('[Test][Positive] : Header Garage link is visible and active @smoke', async ({ garagePage }) => {
         //Expected result: Garage link in header nav is displayed and marked as active
         await expect(garagePage.header.garageLink).toBeVisible();
         await expect(garagePage.header.garageLink).toHaveClass(/-active/);
@@ -24,7 +26,7 @@ test.describe('Garage page (guest)', () => {
         await expect(garagePage.header.instructionsLink).toBeVisible();
     });
 
-    test('[Test][Positive] : User nav dropdown toggle is visible', async ({ garagePage }) => {
+    test('[Test][Positive] : User nav dropdown toggle is visible @smoke', async ({ garagePage }) => {
         //Expected result: "My profile" dropdown toggle is displayed in the header
         await expect(garagePage.userNav.toggle).toBeVisible();
     });
@@ -66,12 +68,12 @@ test.describe('Garage page (guest)', () => {
         await expect(garagePage.sidebar.logoutButton).toBeVisible();
     });
 
-    test('[Test][Positive] : Garage heading is correct', async ({ garagePage }) => {
+    test('[Test][Positive] : Garage heading is correct @smoke', async ({ garagePage }) => {
         //Expected result: page heading displays "Garage"
         await expect(garagePage.garagePanel.heading).toHaveText('Garage');
     });
 
-    test('[Test][Positive] : Add car button is visible and enabled', async ({ garagePage }) => {
+    test('[Test][Positive] : Add car button is visible and enabled @smoke', async ({ garagePage }) => {
         //Expected result: Add car button is displayed and clickable
         await expect(garagePage.garagePanel.addCarButton).toBeVisible();
         await expect(garagePage.garagePanel.addCarButton).toBeEnabled();

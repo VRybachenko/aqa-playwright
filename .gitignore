@@ -146,7 +146,9 @@ playwright/.cache/
 
 # Allure
 allure-results/
+allure-results-*/
 allure-report/
+allure-report-*/
 
 # JetBrains IDE
 .idea/

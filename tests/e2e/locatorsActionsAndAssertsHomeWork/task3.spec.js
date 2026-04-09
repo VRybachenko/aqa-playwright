@@ -2,25 +2,25 @@ const { test, expect } = require('../../../fixtures');
 const { SignupModal } = require('../../../components/SignupModal');
 
 test.describe('Hero section', () => {
-    test('[Test][Positive] : Hero title is visible and has correct text', async ({ homePage }) => {
+    test('[Test][Positive] : Hero title is visible and has correct text @smoke', async ({ homePage }) => {
         //Expected result: title "Do more!" is displayed
         await expect(homePage.hero.title).toBeVisible();
         await expect(homePage.hero.title).toHaveText('Do more!');
     });
 
-    test('[Test][Positive] : Hero description is visible and has correct text', async ({ homePage }) => {
+    test('[Test][Positive] : Hero description is visible and has correct text @smoke', async ({ homePage }) => {
         //Expected result: description text is displayed
         await expect(homePage.hero.description).toBeVisible();
         await expect(homePage.hero.description).toHaveText('With the help of the Hillel auto project, you will have the opportunity to get hands-on experience in manual testing.');
     });
 
-    test('[Test][Positive] : Hero Sign up button is visible and enabled', async ({ homePage }) => {
+    test('[Test][Positive] : Hero Sign up button is visible and enabled @smoke', async ({ homePage }) => {
         //Expected result: Sign up button is visible and clickable
         await expect(homePage.hero.signUpButton).toBeVisible();
         await expect(homePage.hero.signUpButton).toBeEnabled();
     });
 
-    test('[Test][Positive] : Hero Sign up button opens registration modal', async ({ homePage, page }) => {
+    test('[Test][Positive] : Hero Sign up button opens registration modal @smoke', async ({ homePage, page }) => {
         //Step 1: Click the Sign up button in the hero section
         await homePage.clickSignUp();
 
