@@ -2,6 +2,7 @@ const { test: base, expect } = require('@playwright/test');
 const { HomePage } = require('../pages/HomePage');
 const { GaragePage } = require('../pages/GaragePage');
 const { SignupModal } = require('../components/SignupModal');
+const { STORAGE_STATE } = require('../test-data/constants');
 
 const test = base.extend({
     homePage: async ({ page }, use) => {
@@ -25,6 +26,16 @@ const test = base.extend({
         const signupModal = new SignupModal(page);
         await signupModal.expectToBeOpen();
         await use(signupModal);
+    },
+
+    userGaragePage: async ({ browser }, use) => {
+        const context = await browser.newContext({ storageState: STORAGE_STATE });
+        const page = await context.newPage();
+        const garagePage = new GaragePage(page);
+        await garagePage.open();
+        await garagePage.garagePanel.heading.waitFor();
+        await use(garagePage);
+        await context.close();
     },
 });
 
