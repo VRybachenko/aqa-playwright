@@ -9,9 +9,13 @@ aqa-playwright/
 ├── config/         # Environment config (reads from .env)
 ├── pages/          # Page Object classes (HomePage, GaragePage, BasePage)
 ├── components/     # Reusable UI components (Header, Footer, Hero, SignupModal, Sidebar, GaragePanel, UserNav)
-├── fixtures/       # Custom Playwright fixtures (homePage, garagePage, signupModal)
+├── fixtures/       # Custom Playwright fixtures (homePage, garagePage, signupModal, userGaragePage)
 ├── helpers/        # Test data generators (userGenerator)
+├── test-data/      # Shared constants and storage state
+│   └── constants.js           # STORAGE_STATE path
+│   └── user.storageState.json # saved auth session (git-ignored)
 ├── tests/
+│   ├── setup/      # Auth setup (registers user, saves storageState)
 │   └── e2e/        # UI tests
 ├── .env.example    # Environment variables template
 └── playwright.config.js
@@ -62,6 +66,7 @@ Run by tag:
 
 ```bash
 npx playwright test --grep @smoke         # smoke tests only
+npx playwright test --grep-invert @smoke  # all tests except smoke
 ```
 
 Run on specific environment:
@@ -74,6 +79,25 @@ npx playwright test
 ENV=qauto2 npx playwright test
 ```
 
+## Authentication & Storage State
+
+Tests in `playwrightFixturesAndStorageStateHomeWork/` use a pre-authenticated user via Playwright's `storageState`.
+
+How it works:
+1. `setup` project runs `tests/setup/auth.setup.js` — registers a random user and saves the browser session to `test-data/user.storageState.json`
+2. `userGaragePage` fixture loads the saved session into a new browser context — the user is already logged in
+3. `chromium:auth`, `firefox:auth`, `webkit:auth` projects run auth tests with `dependencies: ['setup']`
+
+```
+setup (register user + save storageState)
+  ↓
+chromium:auth → playwrightFixturesAndStorageStateHomeWork/
+firefox:auth  → playwrightFixturesAndStorageStateHomeWork/
+webkit:auth   → playwrightFixturesAndStorageStateHomeWork/
+```
+
+> `user.storageState.json` is git-ignored — it contains session tokens and is regenerated on every test run.
+
 ## Allure Report
 
 ```bash
@@ -84,6 +108,9 @@ npx allure generate allure-results-qauto1 --clean -o allure-report-qauto1 && npx
 # qauto2
 ENV=qauto2 npx playwright test tests/e2e/locatorsActionsAndAssertsHomeWork
 npx allure generate allure-results-qauto2 --clean -o allure-report-qauto2 && npx allure open allure-report-qauto2
+
+# quick serve (generate + open in one command)
+npx allure serve allure-results-qauto1
 ```
 
 ## CI / GitHub Actions
@@ -109,13 +136,14 @@ Required GitHub secrets:
 
 | File | Suite | Tests |
 |---|---|---|
-| `task1.spec.js` | Registration modal | 9 — successful registration, field validation (name, last name, email, password, repeat password), disabled button |
-| `task2.spec.js` | Footer social icons | 8 — visibility and href of each social icon, target="_blank", website and email links |
-| `task3.spec.js` | Hero section | 6 — title, description, Sign up button, modal opening, video iframe |
-| `task4.spec.js` | Header | 12 — logo, nav links, Sign In / Guest log in buttons, modal opening, scroll to sections, redirect |
-| `task5.spec.js` | Garage page (guest) | 13 — guest bar, header nav, user nav dropdown, sidebar links, garage heading, Add car button |
+| `task1.spec.js` | [Locators] Registration modal | 9 — successful registration, field validation (name, last name, email, password, repeat password), disabled button |
+| `task2.spec.js` | [Locators] Footer social icons | 8 — visibility and href of each social icon, target="_blank", website and email links |
+| `task3.spec.js` | [Locators] Hero section | 6 — title, description, Sign up button, modal opening, video iframe |
+| `task4.spec.js` | [Locators] Header | 12 — logo, nav links, Sign In / Guest log in buttons, modal opening, scroll to sections, redirect |
+| `task5.spec.js` | [Locators] Garage page (guest) | 13 — guest bar, header nav, user nav dropdown, sidebar links, garage heading, Add car button |
+| `task1.spec.js` | [Storage] Garage page (authorized user) | 3 — garage heading, Add car button, no guest bar |
 
-**Total: 48 tests** across 3 browsers = **144 test runs**
+**Total: 51 tests** — tasks 1–5 across 3 browsers = **144 runs** + task6 across 3 auth browsers = **9 runs** + 1 setup = **154 total runs**
 
 ## Configuration
 
@@ -125,6 +153,7 @@ Key settings in `playwright.config.js`:
 |---|---|
 | Base URL | from `.env.qauto1` / `.env.qauto2` → `BASE_URL` |
 | Browsers | Chromium, Firefox, WebKit |
+| Auth browsers | Chromium:auth, Firefox:auth, Webkit:auth (depend on setup) |
 | Parallel | `fullyParallel: true` |
 | Retries | 2 |
 | Timeout | 30s |

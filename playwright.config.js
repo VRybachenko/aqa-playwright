@@ -39,16 +39,41 @@ module.exports = defineConfig({
 
   projects: [
     {
+      name: 'setup',
+      testMatch: '**/setup/auth.setup.js',
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: '**/playwrightFixturesAndStorageStateHomeWork/**',
     },
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      testIgnore: '**/playwrightFixturesAndStorageStateHomeWork/**',
     },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      testIgnore: '**/playwrightFixturesAndStorageStateHomeWork/**',
+    },
+    {
+      name: 'chromium:auth',
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
+      testMatch: '**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js',
+    },
+    {
+      name: 'firefox:auth',
+      use: { ...devices['Desktop Firefox'] },
+      dependencies: ['setup'],
+      testMatch: '**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js',
+    },
+    {
+      name: 'webkit:auth',
+      use: { ...devices['Desktop Safari'] },
+      dependencies: ['setup'],
+      testMatch: '**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js',
     },
   ],
 });
