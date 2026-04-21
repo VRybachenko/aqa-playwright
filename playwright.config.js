@@ -45,35 +45,35 @@ module.exports = defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: '**/playwrightFixturesAndStorageStateHomeWork/**',
+      testIgnore: ['**/playwrightFixturesAndStorageStateHomeWork/**', '**/playwrightNetworkApiRequestHomeWork/**'],
     },
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      testIgnore: '**/playwrightFixturesAndStorageStateHomeWork/**',
+      testIgnore: ['**/playwrightFixturesAndStorageStateHomeWork/**', '**/playwrightNetworkApiRequestHomeWork/**'],
     },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testIgnore: '**/playwrightFixturesAndStorageStateHomeWork/**',
+      testIgnore: ['**/playwrightFixturesAndStorageStateHomeWork/**', '**/playwrightNetworkApiRequestHomeWork/**'],
     },
     {
       name: 'chromium:auth',
       use: { ...devices['Desktop Chrome'] },
       dependencies: ['setup'],
-      testMatch: '**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js',
+      testMatch: ['**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js', '**/playwrightNetworkApiRequestHomeWork/**'],
     },
     {
       name: 'firefox:auth',
       use: { ...devices['Desktop Firefox'] },
       dependencies: ['setup'],
-      testMatch: '**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js',
+      testMatch: ['**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js', '**/playwrightNetworkApiRequestHomeWork/**'],
     },
     {
       name: 'webkit:auth',
       use: { ...devices['Desktop Safari'] },
       dependencies: ['setup'],
-      testMatch: '**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js',
+      testMatch: ['**/playwrightFixturesAndStorageStateHomeWork/task1.spec.js', '**/playwrightNetworkApiRequestHomeWork/**'],
     },
   ],
 });

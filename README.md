@@ -7,16 +7,17 @@ A learning project for exploring the [Playwright](https://playwright.dev) test a
 ```
 aqa-playwright/
 ├── config/         # Environment config (reads from .env)
-├── pages/          # Page Object classes (HomePage, GaragePage, BasePage)
-├── components/     # Reusable UI components (Header, Footer, Hero, SignupModal, Sidebar, GaragePanel, UserNav)
-├── fixtures/       # Custom Playwright fixtures (homePage, garagePage, signupModal, userGaragePage)
+├── pages/          # Page Object classes (HomePage, GaragePage, ProfilePage, BasePage)
+├── components/     # Reusable UI components (Header, Footer, Hero, SignupModal, Sidebar, GaragePanel, UserNav, ProfilePanel)
+├── controllers/    # API controller classes (CarsController)
+├── fixtures/       # Custom Playwright fixtures (homePage, garagePage, signupModal, userGaragePage, userProfilePage, userApiContext)
 ├── helpers/        # Test data generators (userGenerator)
 ├── test-data/      # Shared constants and storage state
 │   └── constants.js           # STORAGE_STATE path
 │   └── user.storageState.json # saved auth session (git-ignored)
 ├── tests/
 │   ├── setup/      # Auth setup (registers user, saves storageState)
-│   └── e2e/        # UI tests
+│   └── e2e/        # UI and API tests
 ├── .env.example    # Environment variables template
 └── playwright.config.js
 ```
@@ -81,11 +82,11 @@ ENV=qauto2 npx playwright test
 
 ## Authentication & Storage State
 
-Tests in `playwrightFixturesAndStorageStateHomeWork/` use a pre-authenticated user via Playwright's `storageState`.
+Tests in `playwrightFixturesAndStorageStateHomeWork/`, `playwrightNetworkApiRequestHomeWork/` use a pre-authenticated user via Playwright's `storageState`.
 
 How it works:
 1. `setup` project runs `tests/setup/auth.setup.js` — registers a random user and saves the browser session to `test-data/user.storageState.json`
-2. `userGaragePage` fixture loads the saved session into a new browser context — the user is already logged in
+2. `userGaragePage`, `userProfilePage`, `userApiContext` fixtures load the saved session into a new browser/API context — the user is already logged in
 3. `chromium:auth`, `firefox:auth`, `webkit:auth` projects run auth tests with `dependencies: ['setup']`
 
 ```
@@ -94,9 +95,23 @@ setup (register user + save storageState)
 chromium:auth → playwrightFixturesAndStorageStateHomeWork/
 firefox:auth  → playwrightFixturesAndStorageStateHomeWork/
 webkit:auth   → playwrightFixturesAndStorageStateHomeWork/
+              → playwrightNetworkApiRequestHomeWork/
 ```
 
 > `user.storageState.json` is git-ignored — it contains session tokens and is regenerated on every test run.
+
+## API Testing
+
+API tests use Playwright's `APIRequestContext` via the `userApiContext` fixture and controller classes from `controllers/`.
+
+Controllers wrap all API calls for a given resource — analogous to Page Objects for UI:
+
+```js
+const carsController = new CarsController(userApiContext);
+const response = await carsController.create({ carBrandId: 1, carModelId: 1, mileage: 122 });
+```
+
+For unauthenticated scenarios the built-in `request` fixture is used (has `baseURL` + `httpCredentials` from config, but no session cookie).
 
 ## Allure Report
 
@@ -136,14 +151,14 @@ Required GitHub secrets:
 
 | File | Suite | Tests |
 |---|---|---|
-| `task1.spec.js` | [Locators] Registration modal | 9 — successful registration, field validation (name, last name, email, password, repeat password), disabled button |
-| `task2.spec.js` | [Locators] Footer social icons | 8 — visibility and href of each social icon, target="_blank", website and email links |
-| `task3.spec.js` | [Locators] Hero section | 6 — title, description, Sign up button, modal opening, video iframe |
-| `task4.spec.js` | [Locators] Header | 12 — logo, nav links, Sign In / Guest log in buttons, modal opening, scroll to sections, redirect |
-| `task5.spec.js` | [Locators] Garage page (guest) | 13 — guest bar, header nav, user nav dropdown, sidebar links, garage heading, Add car button |
-| `task1.spec.js` | [Storage] Garage page (authorized user) | 3 — garage heading, Add car button, no guest bar |
-
-**Total: 51 tests** — tasks 1–5 across 3 browsers = **144 runs** + task6 across 3 auth browsers = **9 runs** + 1 setup = **154 total runs**
+| `locatorsActionsAndAssertsHomeWork/task1.spec.js` | Registration modal | 9 — successful registration, field validation |
+| `locatorsActionsAndAssertsHomeWork/task2.spec.js` | Footer social icons | 8 — visibility, href, target="_blank" |
+| `locatorsActionsAndAssertsHomeWork/task3.spec.js` | Hero section | 6 — title, description, Sign up button, video iframe |
+| `locatorsActionsAndAssertsHomeWork/task4.spec.js` | Header | 12 — logo, nav links, Sign In / Guest log in buttons |
+| `locatorsActionsAndAssertsHomeWork/task5.spec.js` | Garage page (guest) | 13 — guest bar, header nav, dropdown, sidebar |
+| `playwrightFixturesAndStorageStateHomeWork/task1.spec.js` | Garage page (authorized) | 3 — heading, Add car button, no guest bar |
+| `playwrightNetworkApiRequestHomeWork/task1.spec.js` | Profile page – network mock | 1 — mocked name/lastName displayed on profile page |
+| `playwrightNetworkApiRequestHomeWork/task2.spec.js` | POST /api/cars | 3 — create car (201), invalid brandId (404), unauthenticated (401) |
 
 ## Configuration
 
