@@ -80,6 +80,51 @@ npx playwright test
 ENV=qauto2 npx playwright test
 ```
 
+## Running Tests via Docker
+
+Docker allows running tests in an isolated environment without installing Node.js or browsers locally.
+
+### Prerequisites
+
+Install [Docker Desktop](https://www.docker.com/products/docker-desktop) and make sure it is running.
+
+### Build the image
+
+```bash
+npm run docker:build
+```
+
+> Run once, or after changing `package.json` dependencies.
+
+### Run tests
+
+```bash
+npm run docker:test                  # all tests
+npm run docker:test:smoke:firefox    # @smoke tests on Firefox only
+```
+
+### Open interactive shell inside the container
+
+```bash
+npm run docker:shell
+```
+
+Once inside (`root@...:/app#`), run any Playwright command directly:
+
+```bash
+npx playwright test --grep @smoke --project=firefox
+npx playwright test --list
+```
+
+Type `exit` to leave the container.
+
+### How it works
+
+- `-v $(pwd):/app` — mounts your local project into the container so file changes are picked up without rebuilding the image
+- `-v /app/node_modules` — keeps the container's `node_modules` intact (not overridden by local files)
+- `--ipc=host` — recommended by Playwright for stable browser execution in Docker
+- `--rm` — automatically removes the container after tests finish
+
 ## Authentication & Storage State
 
 Tests in `playwrightFixturesAndStorageStateHomeWork/`, `playwrightNetworkApiRequestHomeWork/` use a pre-authenticated user via Playwright's `storageState`.

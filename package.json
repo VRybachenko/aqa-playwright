@@ -6,7 +6,11 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "docker:build": "docker build -t aqa-playwright .",
+    "docker:test": "docker run --rm --ipc=host -v $(pwd):/app -v /app/node_modules -e ENV=qauto1 -e BASE_URL=https://qauto.forstudy.space -e HTTP_USERNAME=guest -e HTTP_PASSWORD=welcome2qauto aqa-playwright npx playwright test",
+    "docker:test:smoke:firefox": "docker run --rm --ipc=host -v $(pwd):/app -v /app/node_modules -e ENV=qauto1 -e BASE_URL=https://qauto.forstudy.space -e HTTP_USERNAME=guest -e HTTP_PASSWORD=welcome2qauto aqa-playwright npx playwright test --grep @smoke --project=firefox",
+    "docker:shell": "docker run --rm -it --ipc=host -v $(pwd):/app -v /app/node_modules -e ENV=qauto1 -e BASE_URL=https://qauto.forstudy.space -e HTTP_USERNAME=guest -e HTTP_PASSWORD=welcome2qauto aqa-playwright /bin/bash"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
