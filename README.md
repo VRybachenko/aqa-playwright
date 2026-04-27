@@ -1,6 +1,6 @@
 # aqa-playwright
 
-[![Allure Report](https://VRybachenko.github.io/aqa-playwright/badges/tests.svg)](https://VRybachenko.github.io/aqa-playwright/)
+[![Playwright Tests](https://github.com/VRybachenko/aqa-playwright/actions/workflows/main.yaml/badge.svg)](https://github.com/VRybachenko/aqa-playwright/actions/workflows/main.yaml) [![Allure Report](https://img.shields.io/badge/Allure-Report-orange)](https://vrybachenko.github.io/aqa-playwright/)
 
 A learning project for exploring the [Playwright](https://playwright.dev) test automation framework.
 
@@ -177,7 +177,10 @@ npx allure serve allure-results-qauto1
 
 ## CI / GitHub Actions
 
-Runs automatically on every push and pull request via GitHub Actions on both environments (`qauto1`, `qauto2`) in parallel.
+Tests run automatically via `.github/workflows/main.yaml` in the following cases:
+
+- every push and pull request to any branch
+- daily at 10:00 Kyiv time (07:00 UTC)
 
 Only tests tagged `@smoke` are executed in CI. To mark a test as smoke — add `@smoke` to its name:
 
@@ -185,14 +188,34 @@ Only tests tagged `@smoke` are executed in CI. To mark a test as smoke — add `
 test('[Test][Positive] : Some test @smoke', async ({ page }) => { ... });
 ```
 
-Required GitHub secrets:
+### Docker in CI
+
+Tests run inside the official Playwright Docker image `mcr.microsoft.com/playwright:v1.58.0-jammy` — no browser installation needed, browsers are bundled in the image.
+
+Both environments (`qauto1`, `qauto2`) run in parallel as a matrix.
+
+### Allure Report on GitHub Pages
+
+After every run the `report` job:
+1. Downloads Allure results from both matrix environments and merges them
+2. Restores history from the `gh-pages` branch to preserve the Trend widget
+3. Generates the report with `allure generate`
+4. Deploys to GitHub Pages — available at https://vrybachenko.github.io/aqa-playwright/
+
+The last 30 runs are kept in history. The Trend widget on the Allure overview page shows pass/fail dynamics across runs.
+
+### GitHub Pages setup (one-time)
+
+Settings → Pages → Source: **Deploy from a branch** → `gh-pages` / `/ (root)`
+
+### Required GitHub secrets
 
 | Secret | Description |
 |---|---|
 | `BASE_URL_QAUTO1` | Base URL for qauto1 environment |
 | `BASE_URL_QAUTO2` | Base URL for qauto2 environment |
-| `HTTP_USERNAME` | Basic Auth username (stored in GitHub Secrets) |
-| `HTTP_PASSWORD` | Basic Auth password (stored in GitHub Secrets) |
+| `HTTP_USERNAME` | Basic Auth username |
+| `HTTP_PASSWORD` | Basic Auth password |
 
 ## Tests
 
