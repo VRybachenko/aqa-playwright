@@ -1,5 +1,7 @@
 # aqa-playwright
 
+[![Allure Report](https://VRybachenko.github.io/aqa-playwright/badges/tests.svg)](https://VRybachenko.github.io/aqa-playwright/)
+
 A learning project for exploring the [Playwright](https://playwright.dev) test automation framework.
 
 ## Project Structure
