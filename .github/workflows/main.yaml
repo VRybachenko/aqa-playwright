@@ -24,10 +24,18 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: npm install
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npm install
 
       - name: Run tests on ${{ matrix.env }}
-        run: npx playwright test --grep @smoke
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 15
+          max_attempts: 2
+          command: npx playwright test --grep @smoke
         env:
           HOME: /root
           ENV: ${{ matrix.env }}

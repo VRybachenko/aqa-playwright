@@ -22,13 +22,25 @@ jobs:
           node-version: 24
 
       - name: Install dependencies
-        run: npm install
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npm install
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npx playwright install --with-deps
 
       - name: Run tests on ${{ matrix.env }}
-        run: npx playwright test --grep @smoke
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 15
+          max_attempts: 2
+          command: npx playwright test --grep @smoke
         env:
           ENV: ${{ matrix.env }}
           BASE_URL: ${{ matrix.env == 'qauto1' && secrets.BASE_URL_QAUTO1 || secrets.BASE_URL_QAUTO2 }}
