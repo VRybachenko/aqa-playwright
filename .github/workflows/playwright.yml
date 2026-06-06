@@ -22,21 +22,21 @@ jobs:
           node-version: 24
 
       - name: Install dependencies
-        uses: nick-fields/retry@v3.1.0
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 3
           command: npm install
 
       - name: Install Playwright browsers
-        uses: nick-fields/retry@v3.1.0
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 10
           max_attempts: 3
           command: npx playwright install --with-deps
 
       - name: Run tests on ${{ matrix.env }}
-        uses: nick-fields/retry@v3.1.0
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 15
           max_attempts: 2
