@@ -15,28 +15,28 @@ jobs:
         env: [qauto1, qauto2]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
 
       - name: Install dependencies
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v3.1.0
         with:
           timeout_minutes: 10
           max_attempts: 3
           command: npm install
 
       - name: Install Playwright browsers
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v3.1.0
         with:
           timeout_minutes: 10
           max_attempts: 3
           command: npx playwright install --with-deps
 
       - name: Run tests on ${{ matrix.env }}
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v3.1.0
         with:
           timeout_minutes: 15
           max_attempts: 2
@@ -49,7 +49,7 @@ jobs:
 
       - name: Upload test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report-${{ matrix.env }}
           path: playwright-report/

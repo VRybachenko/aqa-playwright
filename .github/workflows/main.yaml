@@ -21,17 +21,17 @@ jobs:
         env: [qauto1, qauto2]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install dependencies
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v3.1.0
         with:
           timeout_minutes: 10
           max_attempts: 3
           command: npm install
 
       - name: Run tests on ${{ matrix.env }}
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v3.1.0
         with:
           timeout_minutes: 15
           max_attempts: 2
@@ -45,7 +45,7 @@ jobs:
 
       - name: Upload Allure results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: allure-results-${{ matrix.env }}
           path: allure-results-${{ matrix.env }}/
@@ -59,9 +59,9 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -69,14 +69,14 @@ jobs:
         run: npm install -g allure-commandline
 
       - name: Download Allure results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           pattern: allure-results-*
           path: allure-results
           merge-multiple: true
 
       - name: Restore Allure history
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         continue-on-error: true
         with:
           ref: gh-pages
