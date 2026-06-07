@@ -7,8 +7,41 @@ on:
     branches: [ '**' ]
 
 jobs:
+  install-browsers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: npx playwright install --with-deps
+
   test:
     runs-on: ubuntu-latest
+    needs: install-browsers
 
     strategy:
       matrix:
@@ -28,12 +61,14 @@ jobs:
           max_attempts: 3
           command: npm install
 
-      - name: Install Playwright browsers
-        uses: nick-fields/retry@v3
+      - name: Restore Playwright browsers cache
+        uses: actions/cache@v4
         with:
-          timeout_minutes: 10
-          max_attempts: 3
-          command: npx playwright install --with-deps
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install system dependencies
+        run: npx playwright install-deps
 
       - name: Run tests on ${{ matrix.env }}
         uses: nick-fields/retry@v3
