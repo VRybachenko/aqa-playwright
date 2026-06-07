@@ -177,10 +177,11 @@ npx allure serve allure-results-qauto1
 
 ## CI / GitHub Actions
 
-Tests run automatically via `.github/workflows/main.yaml` in the following cases:
+Tests run automatically via two workflows:
 
-- every push and pull request to any branch
-- daily at 10:00 Kyiv time (07:00 UTC)
+**`.github/workflows/playwright.yml`** — runs on every push and pull request to any branch
+
+**`.github/workflows/main.yaml`** — runs on every push and pull request to any branch, and daily at 10:00 Kyiv time (07:00 UTC)
 
 Only tests tagged `@smoke` are executed in CI. To mark a test as smoke — add `@smoke` to its name:
 
@@ -190,7 +191,7 @@ test('[Test][Positive] : Some test @smoke', async ({ page }) => { ... });
 
 ### Docker in CI
 
-Tests run inside the official Playwright Docker image `mcr.microsoft.com/playwright:v1.58.0-jammy` — no browser installation needed, browsers are bundled in the image.
+Tests run inside the official Playwright Docker image `mcr.microsoft.com/playwright:v1.58.2-jammy` — no browser installation needed, browsers are bundled in the image.
 
 Both environments (`qauto1`, `qauto2`) run in parallel as a matrix.
 
